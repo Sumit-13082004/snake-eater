@@ -18,6 +18,34 @@ const block = {
 ctx.fillStyle = block.color;
 ctx.fillRect(block.x, block.y, block.width, block.height);
 
+function update(deltaTime) {
+  block.x = block.x + block.speed * deltaTime;
+
+  if (block.x > canvas.width) {
+    block.x = -block.width; // wrap around
+  }
+}
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = block.color;
+  ctx.fillRect(block.x, block.y, block.width, block.height);
+}
+
+let lastTime = 0;
+
+function loop(time) {
+  const deltaTime = (time - lastTime) / 1000;
+  lastTime = time;
+
+  update(deltaTime);
+  render();
+
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
 
 // let direction = "RIGHT";
 
