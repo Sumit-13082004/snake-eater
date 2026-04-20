@@ -13,16 +13,45 @@ const block = {
   height: 30,
   color: "green",
   speed: 120, // 120px per second
+  vx: 1,
+  vy: 0,
 };
 
 ctx.fillStyle = block.color;
 ctx.fillRect(block.x, block.y, block.width, block.height);
 
+window.addEventListener('keydown', (event) => {
+    if (event.key == "ArrowRight") {
+        block.vx = 1;
+        block.vy = 0;
+    }
+
+    else if (event.key == "ArrowLeft") {
+        block.vx = -1;
+        block.vy = 0;
+    }
+
+    else if (event.key == "ArrowDown") {
+        block.vx = 0;
+        block.vy = 1;
+    }
+
+    else {
+        block.vx = 0;
+        block.vy = -1;
+    }
+});
+
 function update(deltaTime) {
-  block.x = block.x + block.speed * deltaTime;
+  block.x = block.x + (block.vx * block.speed * deltaTime);
+  block.y = block.y + (block.vy * block.speed * deltaTime);
 
   if (block.x > canvas.width) {
     block.x = -block.width; // wrap around
+  }
+
+  else if (block.x < 0) {
+    block.x = canvas.width;
   }
 }
 
