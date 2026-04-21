@@ -20,39 +20,38 @@ const block = {
 ctx.fillStyle = block.color;
 ctx.fillRect(block.x, block.y, block.width, block.height);
 
-window.addEventListener('keydown', (event) => {
-    if (event.key == "ArrowRight") {
-        block.vx = 1;
-        block.vy = 0;
-    }
-
-    else if (event.key == "ArrowLeft") {
-        block.vx = -1;
-        block.vy = 0;
-    }
-
-    else if (event.key == "ArrowDown") {
-        block.vx = 0;
-        block.vy = 1;
-    }
-
-    else {
-        block.vx = 0;
-        block.vy = -1;
-    }
+window.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case "ArrowRight":
+      block.vx = 1;
+      block.vy = 0;
+      break;
+    case "ArrowLeft":
+      block.vx = -1;
+      block.vy = 0;
+      break;
+    case "ArrowDown":
+      block.vx = 0;
+      block.vy = 1;
+      break;
+    case "ArrowUp":
+      block.vx = 0;
+      block.vy = -1;
+      break;
+  }
 });
 
 function update(deltaTime) {
-  block.x = block.x + (block.vx * block.speed * deltaTime);
-  block.y = block.y + (block.vy * block.speed * deltaTime);
+  block.x = block.x + block.vx * block.speed * deltaTime;
+  block.y = block.y + block.vy * block.speed * deltaTime;
 
   if (block.x > canvas.width) {
     block.x = -block.width; // wrap around
   }
 
-  else if (block.x < 0) {
-    block.x = canvas.width;
-  }
+  // else if (block.x < 0) {
+  //   block.x = canvas.width;
+  // }
 }
 
 function render() {
