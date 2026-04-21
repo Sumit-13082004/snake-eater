@@ -47,11 +47,15 @@ function update(deltaTime) {
 
   if (block.x > canvas.width) {
     block.x = -block.width; // wrap around
+  } else if (block.x < -block.width) {
+    block.x = canvas.width;
   }
 
-  // else if (block.x < 0) {
-  //   block.x = canvas.width;
-  // }
+  if (block.y > canvas.height) {
+    block.y = -block.height;
+  } else if (block.y < -block.height) {
+    block.y = canvas.height;
+  }
 }
 
 function render() {
@@ -64,8 +68,10 @@ function render() {
 let lastTime = 0;
 
 function loop(time) {
-  const deltaTime = (time - lastTime) / 1000;
+  let deltaTime = (time - lastTime) / 1000;
   lastTime = time;
+
+  deltaTime = Math.min(deltaTime, 0.05);
 
   update(deltaTime);
   render();
