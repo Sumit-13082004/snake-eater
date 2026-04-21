@@ -17,9 +17,6 @@ const block = {
   vy: 0,
 };
 
-ctx.fillStyle = block.color;
-ctx.fillRect(block.x, block.y, block.width, block.height);
-
 window.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "ArrowRight":
@@ -45,6 +42,7 @@ function update(deltaTime) {
   block.x = block.x + block.vx * block.speed * deltaTime;
   block.y = block.y + block.vy * block.speed * deltaTime;
 
+  // screen wrap
   if (block.x > canvas.width) {
     block.x = -block.width; // wrap around
   } else if (block.x < -block.width) {
@@ -71,6 +69,7 @@ function loop(time) {
   let deltaTime = (time - lastTime) / 1000;
   lastTime = time;
 
+  // setting max deltaTime
   deltaTime = Math.min(deltaTime, 0.05);
 
   update(deltaTime);
@@ -80,25 +79,3 @@ function loop(time) {
 }
 
 requestAnimationFrame(loop);
-
-// let direction = "RIGHT";
-
-// function handleKey(e) {
-//   if (e.key === "ArrowUp") {
-//     ctx.clearRect(x, y, width, height);
-//     y -= 20;
-//     ctx.fillRect(x, y, width, height);
-//   } else if (e.key === "ArrowDown") {
-//     ctx.clearRect(x, y, width, height);
-//     y += 20;
-//     ctx.fillRect(x, y, width, height);
-//   } else if (e.key === "ArrowLeft") {
-//     ctx.clearRect(x, y, width, height);
-//     x -= 20;
-//     ctx.fillRect(x, y, width, height);
-//   } else if (e.key === "ArrowRight") {
-//     ctx.clearRect(x, y, width, height);
-//     x += 20;
-//     ctx.fillRect(x, y, width, height);
-//   }
-// }
