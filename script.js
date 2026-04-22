@@ -6,7 +6,7 @@ const GRID_SIZE = 30;
 const cols = canvas.width / GRID_SIZE;
 const rows = canvas.height / GRID_SIZE;
 
-function drawGrid () {
+function drawGrid() {
   ctx.strokeStyle = "rgba(255, 165, 0, 0.5)";
   ctx.lineWidth = 1;
 
@@ -25,6 +25,8 @@ function drawGrid () {
   }
 }
 
+drawGrid();
+
 let x = 10;
 let y = 10;
 let width = 30;
@@ -41,6 +43,28 @@ const block = {
   moveInterval: 0.15,
   moveTimer: 0,
 };
+
+const fruit = {
+  x: null,
+  y: null,
+  radius: 7.5,
+  color: "red",
+};
+
+function spawnFruit() {
+  const randomCol = Math.floor(Math.random() * cols);
+  const randomRow = Math.floor(Math.random() * rows);
+
+  fruit.x = randomCol * GRID_SIZE;
+  fruit.y = randomRow * GRID_SIZE;
+}
+
+spawnFruit();
+
+ctx.fillStyle = fruit.color;
+ctx.beginPath();
+ctx.arc(fruit.x + (fruit.radius * 2), fruit.y + (fruit.radius * 2), fruit.radius, 0, Math.PI * 2);
+ctx.fill();
 
 window.addEventListener("keydown", (event) => {
   switch (event.key) {
@@ -80,7 +104,7 @@ function update(deltaTime) {
 
   if (block.moveTimer >= block.moveInterval) {
     block.moveTimer -= block.moveInterval;
-    
+
     block.x += block.vx * GRID_SIZE;
     block.y += block.vy * GRID_SIZE;
 
@@ -100,7 +124,7 @@ function update(deltaTime) {
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
   drawGrid();
 
   ctx.fillStyle = block.color;
@@ -121,4 +145,4 @@ function loop(time) {
   requestAnimationFrame(loop);
 }
 
-requestAnimationFrame(loop);
+// requestAnimationFrame(loop);
