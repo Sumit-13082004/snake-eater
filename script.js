@@ -36,9 +36,10 @@ const block = {
   width: 30,
   height: 30,
   color: "green",
-  speed: 120, // 120px per second
   vx: 1,
   vy: 0,
+  moveInterval: 0.15,
+  moveTimer: 0,
 };
 
 window.addEventListener("keydown", (event) => {
@@ -75,20 +76,25 @@ window.addEventListener("keydown", (event) => {
 });
 
 function update(deltaTime) {
-  block.x = block.x + block.vx * block.speed * deltaTime;
-  block.y = block.y + block.vy * block.speed * deltaTime;
+  block.moveTimer += deltaTime;
 
-  // screen wrap
-  if (block.x > canvas.width) {
-    block.x = -block.width; // wrap around
-  } else if (block.x < -block.width) {
-    block.x = canvas.width;
-  }
+  if (block.moveTimer >= block.moveInterval) {
+    block.moveTimer -= block.moveInterval;
+    
+    block.x += block.vx * GRID_SIZE;
+    block.y += block.vy * GRID_SIZE;
 
-  if (block.y > canvas.height) {
-    block.y = -block.height;
-  } else if (block.y < -block.height) {
-    block.y = canvas.height;
+    if (block.x >= canvas.width) {
+      block.x = 0;
+    } else if (block.x < 0) {
+      block.x = canvas.width - GRID_SIZE;
+    }
+
+    if (block.y >= canvas.height) {
+      block.y = 0;
+    } else if (block.y < 0) {
+      block.y = canvas.height - GRID_SIZE;
+    }
   }
 }
 
@@ -107,8 +113,7 @@ function loop(time) {
   let deltaTime = (time - lastTime) / 1000;
   lastTime = time;
 
-  // setting max deltaTime
-  deltaTime = Math.min(deltaTime, 0.05);
+  deltaTime = Math.min(deltaTime, 0.15);
 
   update(deltaTime);
   render();
