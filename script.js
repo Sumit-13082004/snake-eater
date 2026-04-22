@@ -1,14 +1,38 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const GRID_SIZE = 30;
+
+const cols = canvas.width / GRID_SIZE;
+const rows = canvas.height / GRID_SIZE;
+
+function drawGrid () {
+  ctx.strokeStyle = "rgba(255, 165, 0, 0.5)";
+  ctx.lineWidth = 1;
+
+  for (let i = 0; i <= canvas.width; i += GRID_SIZE) {
+    ctx.beginPath();
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i, canvas.height);
+    ctx.stroke();
+  }
+
+  for (let j = 0; j <= canvas.height; j += GRID_SIZE) {
+    ctx.beginPath();
+    ctx.moveTo(0, j);
+    ctx.lineTo(canvas.width, j);
+    ctx.stroke();
+  }
+}
+
 let x = 10;
 let y = 10;
 let width = 30;
 let height = 30;
 
 const block = {
-  x: 10,
-  y: 10,
+  x: 0,
+  y: 0,
   width: 30,
   height: 30,
   color: "green",
@@ -70,6 +94,8 @@ function update(deltaTime) {
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  drawGrid();
 
   ctx.fillStyle = block.color;
   ctx.fillRect(block.x, block.y, block.width, block.height);
