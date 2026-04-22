@@ -122,6 +122,11 @@ function update(deltaTime) {
       block.y = canvas.height - GRID_SIZE;
     }
   }
+
+  if (block.x === fruit.x && block.y === fruit.y) {
+    console.log("Fruit eaten");
+    spawnFruit();
+  }
 }
 
 function drawFruit() {
