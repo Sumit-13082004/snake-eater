@@ -20,20 +20,32 @@ const block = {
 window.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "ArrowRight":
-      block.vx = 1;
-      block.vy = 0;
+      // Only turn Right if we aren't currently moving Left
+      if (block.vx !== -1) {
+        block.vx = 1;
+        block.vy = 0;
+      }
       break;
     case "ArrowLeft":
-      block.vx = -1;
-      block.vy = 0;
+      // Only turn Left if we aren't currently moving Right
+      if (block.vx !== 1) {
+        block.vx = -1;
+        block.vy = 0;
+      }
       break;
     case "ArrowDown":
-      block.vx = 0;
-      block.vy = 1;
+      // Only turn Down if we aren't currently moving Up
+      if (block.vy !== -1) {
+        block.vx = 0;
+        block.vy = 1;
+      }
       break;
     case "ArrowUp":
-      block.vx = 0;
-      block.vy = -1;
+      // Only turn Up if we aren't currently moving Down
+      if (block.vy !== 1) {
+        block.vx = 0;
+        block.vy = -1;
+      }
       break;
   }
 });
