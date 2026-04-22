@@ -52,19 +52,21 @@ const fruit = {
 };
 
 function spawnFruit() {
-  const randomCol = Math.floor(Math.random() * cols);
-  const randomRow = Math.floor(Math.random() * rows);
+  let safeZone = false;
+  while (!safeZone) {
+    const randomCol = Math.floor(Math.random() * cols);
+    const randomRow = Math.floor(Math.random() * rows);
 
-  fruit.x = randomCol * GRID_SIZE;
-  fruit.y = randomRow * GRID_SIZE;
+    fruit.x = randomCol * GRID_SIZE;
+    fruit.y = randomRow * GRID_SIZE;
+
+    if (fruit.x !== block.x || fruit.y !== block.y) {
+      safeZone = true;
+    }
+  }
 }
 
 spawnFruit();
-
-ctx.fillStyle = fruit.color;
-ctx.beginPath();
-ctx.arc(fruit.x + (GRID_SIZE / 2), fruit.y + (GRID_SIZE / 2), fruit.radius, 0, Math.PI * 2);
-ctx.fill();
 
 window.addEventListener("keydown", (event) => {
   switch (event.key) {
@@ -122,11 +124,26 @@ function update(deltaTime) {
   }
 }
 
+function drawFruit() {
+  ctx.fillStyle = fruit.color;
+  ctx.beginPath();
+  ctx.arc(
+    fruit.x + GRID_SIZE / 2,
+    fruit.y + GRID_SIZE / 2,
+    fruit.radius,
+    0,
+    Math.PI * 2,
+  );
+  ctx.fill();
+}
+
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawGrid();
 
+  drawFruit();
+  
   ctx.fillStyle = block.color;
   ctx.fillRect(block.x, block.y, block.width, block.height);
 }
@@ -145,4 +162,4 @@ function loop(time) {
   requestAnimationFrame(loop);
 }
 
-// requestAnimationFrame(loop);
+requestAnimationFrame(loop);
