@@ -47,7 +47,7 @@ const block = {
 const fruit = {
   x: null,
   y: null,
-  radius: 7.5,
+  radius: 10,
   color: "red",
 };
 
@@ -63,7 +63,7 @@ spawnFruit();
 
 ctx.fillStyle = fruit.color;
 ctx.beginPath();
-ctx.arc(fruit.x + (fruit.radius * 2), fruit.y + (fruit.radius * 2), fruit.radius, 0, Math.PI * 2);
+ctx.arc(fruit.x + (GRID_SIZE / 2), fruit.y + (GRID_SIZE / 2), fruit.radius, 0, Math.PI * 2);
 ctx.fill();
 
 window.addEventListener("keydown", (event) => {
