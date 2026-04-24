@@ -32,17 +32,32 @@ let y = 10;
 let width = 30;
 let height = 30;
 
-const block = {
-  x: 0,
-  y: 0,
-  width: 30,
-  height: 30,
-  color: "green",
+// const block = {
+//   x: 0,
+//   y: 0,
+//   width: 30,
+//   height: 30,
+//   color: "green",
+//   vx: 1,
+//   vy: 0,
+//   moveInterval: 0.15,
+//   moveTimer: 0,
+// };
+
+const Snake = {
+  body: [
+    { x: 60, y: 30 }, // Head
+    { x: 30, y: 30 }, // Body
+    { x: 0, y: 30 }  // Tail
+  ],
   vx: 1,
   vy: 0,
+  nextVx: 1,
+  nextVy: 0,
   moveInterval: 0.15,
   moveTimer: 0,
-};
+  color: "green",
+}
 
 const fruit = {
   x: null,
@@ -66,67 +81,68 @@ function spawnFruit() {
   }
 }
 
-spawnFruit();
+// spawnFruit();
 
-window.addEventListener("keydown", (event) => {
-  switch (event.key) {
-    case "ArrowRight":
-      // Only turn Right if we aren't currently moving Left
-      if (block.vx !== -1) {
-        block.vx = 1;
-        block.vy = 0;
-      }
-      break;
-    case "ArrowLeft":
-      // Only turn Left if we aren't currently moving Right
-      if (block.vx !== 1) {
-        block.vx = -1;
-        block.vy = 0;
-      }
-      break;
-    case "ArrowDown":
-      // Only turn Down if we aren't currently moving Up
-      if (block.vy !== -1) {
-        block.vx = 0;
-        block.vy = 1;
-      }
-      break;
-    case "ArrowUp":
-      // Only turn Up if we aren't currently moving Down
-      if (block.vy !== 1) {
-        block.vx = 0;
-        block.vy = -1;
-      }
-      break;
+window.addEventListener("keydown", (e) => {
+  // Prevent default scrolling when using arrow keys
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+    e.preventDefault();
+  }
+
+  // Update next velocity, preventing 180-degree turns
+  if (e.key === "ArrowUp" && Snake.vy === 0) {
+    Snake.nextVx = 0;
+    Snake.nextVy = -1;
+  } else if (e.key === "ArrowDown" && Snake.vy === 0) {
+    Snake.nextVx = 0;
+    Snake.nextVy = 1;
+  } else if (e.key === "ArrowLeft" && Snake.vx === 0) {
+    Snake.nextVx = -1;
+    Snake.nextVy = 0;
+  } else if (e.key === "ArrowRight" && Snake.vx === 0) {
+    Snake.nextVx = 1;
+    Snake.nextVy = 0;
   }
 });
 
 function update(deltaTime) {
-  block.moveTimer += deltaTime;
+  Snake.moveTimer += deltaTime;
 
-  if (block.moveTimer >= block.moveInterval) {
-    block.moveTimer -= block.moveInterval;
+  if (Snake.moveTimer >= Snake.moveInterval) {
+    Snake.vx = Snake.nextVx;
+    Snake.vy = Snake.nextVy;
 
-    block.x += block.vx * GRID_SIZE;
-    block.y += block.vy * GRID_SIZE;
+    const currentHead = Snake.body[0];
+    const newHead = {
+      x: currentHead.x + (Snake.vx * GRID_SIZE),
+      y: currentHead.y + (Snake.vy * GRID_SIZE)
+    };
 
-    if (block.x >= canvas.width) {
-      block.x = 0;
-    } else if (block.x < 0) {
-      block.x = canvas.width - GRID_SIZE;
-    }
+    Snake.body.unshift(newHead);
+    Snake.body.pop();
 
-    if (block.y >= canvas.height) {
-      block.y = 0;
-    } else if (block.y < 0) {
-      block.y = canvas.height - GRID_SIZE;
-    }
+    Snake.moveTimer -= Snake.moveInterval;
+
+    // block.x += block.vx * GRID_SIZE;
+    // block.y += block.vy * GRID_SIZE;
+
+    // if (block.x >= canvas.width) {
+    //   block.x = 0;
+    // } else if (block.x < 0) {
+    //   block.x = canvas.width - GRID_SIZE;
+    // }
+
+    // if (block.y >= canvas.height) {
+    //   block.y = 0;
+    // } else if (block.y < 0) {
+    //   block.y = canvas.height - GRID_SIZE;
+    // }
   }
 
-  if (block.x === fruit.x && block.y === fruit.y) {
-    console.log("Fruit eaten");
-    spawnFruit();
-  }
+  // if (block.x === fruit.x && block.y === fruit.y) {
+  //   console.log("Fruit eaten");
+  //   spawnFruit();
+  // }
 }
 
 function drawFruit() {
@@ -142,15 +158,21 @@ function drawFruit() {
   ctx.fill();
 }
 
+function drawSnake() {
+  ctx.fillStyle = Snake.color;
+  for (const segment of Snake.body) {
+    ctx.fillRect(segment.x, segment.y, GRID_SIZE, GRID_SIZE);
+  }
+}
+
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawGrid();
 
-  drawFruit();
-  
-  ctx.fillStyle = block.color;
-  ctx.fillRect(block.x, block.y, block.width, block.height);
+  // drawFruit();
+
+  drawSnake();
 }
 
 let lastTime = 0;
