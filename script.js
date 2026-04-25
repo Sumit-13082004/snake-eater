@@ -75,7 +75,9 @@ function spawnFruit() {
     fruit.x = randomCol * GRID_SIZE;
     fruit.y = randomRow * GRID_SIZE;
 
-    const isOnSnake = Snake.body.some(segment => segment.x === fruit.x && segment.y === fruit.y);
+    const isOnSnake = Snake.body.some(
+      (segment) => segment.x === fruit.x && segment.y === fruit.y,
+    );
 
     if (!isOnSnake) {
       safeZone = true;
@@ -136,11 +138,18 @@ function update(deltaTime) {
     }
 
     Snake.body.unshift(newHead);
-    Snake.body.pop();
+
+    // Checking collison with the fruit
+    if (Snake.body[0].x === fruit.x && Snake.body[0].y === fruit.y) {
+      console.log("Fruit Eaten");
+      spawnFruit();
+    } else {
+      // snake growing logic
+      Snake.body.pop();
+    }
 
     Snake.moveTimer -= Snake.moveInterval;
   }
-
 }
 
 function drawFruit() {
@@ -179,6 +188,7 @@ function loop(time) {
   let deltaTime = (time - lastTime) / 1000;
   lastTime = time;
 
+  // limting the time different to under 150ms
   deltaTime = Math.min(deltaTime, 0.15);
 
   update(deltaTime);
