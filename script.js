@@ -75,13 +75,14 @@ function spawnFruit() {
     fruit.x = randomCol * GRID_SIZE;
     fruit.y = randomRow * GRID_SIZE;
 
-    if (fruit.x !== block.x || fruit.y !== block.y) {
+    const isOnSnake = Snake.body.some(segment => segment.x === fruit.x && segment.y === fruit.y);
+
+    if (!isOnSnake) {
       safeZone = true;
     }
   }
 }
-
-// spawnFruit();
+spawnFruit();
 
 window.addEventListener("keydown", (e) => {
   // Prevent default scrolling when using arrow keys
@@ -139,6 +140,7 @@ function update(deltaTime) {
 
     Snake.moveTimer -= Snake.moveInterval;
   }
+
 }
 
 function drawFruit() {
@@ -166,7 +168,7 @@ function render() {
 
   drawGrid();
 
-  // drawFruit();
+  drawFruit();
 
   drawSnake();
 }
