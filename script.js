@@ -48,7 +48,7 @@ const Snake = {
   body: [
     { x: 60, y: 30 }, // Head
     { x: 30, y: 30 }, // Body
-    { x: 0, y: 30 }  // Tail
+    { x: 0, y: 30 }, // Tail
   ],
   vx: 1,
   vy: 0,
@@ -57,7 +57,7 @@ const Snake = {
   moveInterval: 0.15,
   moveTimer: 0,
   color: "green",
-}
+};
 
 const fruit = {
   x: null,
@@ -113,36 +113,32 @@ function update(deltaTime) {
     Snake.vy = Snake.nextVy;
 
     const currentHead = Snake.body[0];
-    const newHead = {
-      x: currentHead.x + (Snake.vx * GRID_SIZE),
-      y: currentHead.y + (Snake.vy * GRID_SIZE)
+    let newHead = {
+      x: currentHead.x + Snake.vx * GRID_SIZE,
+      y: currentHead.y + Snake.vy * GRID_SIZE,
     };
+
+    // --- SCREEN WRAP LOGIC ---
+
+    // X-Axis (Left and Right borders)
+    if (newHead.x >= canvas.width) {
+      newHead.x = 0; // Went off the right, appear on the left
+    } else if (newHead.x < 0) {
+      newHead.x = canvas.width - GRID_SIZE; // Went off the left, appear on the right
+    }
+
+    // Y-Axis (Top and Bottom borders)
+    if (newHead.y >= canvas.height) {
+      newHead.y = 0; // Went off the bottom, appear on the top
+    } else if (newHead.y < 0) {
+      newHead.y = canvas.height - GRID_SIZE; // Went off the top, appear on the bottom
+    }
 
     Snake.body.unshift(newHead);
     Snake.body.pop();
 
     Snake.moveTimer -= Snake.moveInterval;
-
-    // block.x += block.vx * GRID_SIZE;
-    // block.y += block.vy * GRID_SIZE;
-
-    // if (block.x >= canvas.width) {
-    //   block.x = 0;
-    // } else if (block.x < 0) {
-    //   block.x = canvas.width - GRID_SIZE;
-    // }
-
-    // if (block.y >= canvas.height) {
-    //   block.y = 0;
-    // } else if (block.y < 0) {
-    //   block.y = canvas.height - GRID_SIZE;
-    // }
   }
-
-  // if (block.x === fruit.x && block.y === fruit.y) {
-  //   console.log("Fruit eaten");
-  //   spawnFruit();
-  // }
 }
 
 function drawFruit() {
