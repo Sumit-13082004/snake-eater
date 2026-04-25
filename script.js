@@ -1,6 +1,8 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+let gameOver = false;
+
 const GRID_SIZE = 30;
 
 const cols = canvas.width / GRID_SIZE;
@@ -31,18 +33,6 @@ let x = 10;
 let y = 10;
 let width = 30;
 let height = 30;
-
-// const block = {
-//   x: 0,
-//   y: 0,
-//   width: 30,
-//   height: 30,
-//   color: "green",
-//   vx: 1,
-//   vy: 0,
-//   moveInterval: 0.15,
-//   moveTimer: 0,
-// };
 
 const Snake = {
   body: [
@@ -109,6 +99,11 @@ window.addEventListener("keydown", (e) => {
 });
 
 function update(deltaTime) {
+
+  if (gameOver) {
+    return;
+  }
+
   Snake.moveTimer += deltaTime;
 
   if (Snake.moveTimer >= Snake.moveInterval) {
@@ -146,6 +141,17 @@ function update(deltaTime) {
     } else {
       // snake growing logic
       Snake.body.pop();
+    }
+
+    for (let i = 1; i < Snake.body.length; i++) {
+      if (
+        Snake.body[0].x === Snake.body[i].x &&
+        Snake.body[0].y === Snake.body[i].y
+      ) {
+        gameOver = true;
+        console.log("Game Over! You bit yourself.");
+        break;
+      }
     }
 
     Snake.moveTimer -= Snake.moveInterval;
