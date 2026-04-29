@@ -80,9 +80,9 @@ function updateSnakePosition(deltaTime) {
 
 const Snake = {
   body: [
-    { x: 60, y: 30 }, // Head
-    { x: 30, y: 30 }, // Body
-    { x: 0, y: 30 }, // Tail
+    { x: 90, y: 30 }, // Head
+    { x: 60, y: 30 }, // Body
+    { x: 30, y: 30 }, // Tail
   ],
   vx: 1,
   vy: 0,
