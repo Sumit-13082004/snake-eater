@@ -2,7 +2,19 @@ import { ctx } from "./canvas.js";
 import { GRID_SIZE } from "./constants.js";
 import { canvas } from "./canvas.js";
 import { fruit, spawnFruit } from "./fruit.js";
-import { gameOver } from "./main.js";
+
+function resetSnake() {
+  Snake.body = [
+    { x: 90, y: 30 }, // Head
+    { x: 60, y: 30 }, // Body
+    { x: 30, y: 30 }, // Tail
+  ];
+  Snake.vx = 1;
+  Snake.vy = 0;
+  Snake.nextVx = 1;
+  Snake.nextVy = 0;
+  Snake.moveTimer = 0;
+}
 
 function bodyCollison() {
   for (let i = 1; i < Snake.body.length; i++) {
@@ -10,9 +22,8 @@ function bodyCollison() {
       Snake.body[0].x === Snake.body[i].x &&
       Snake.body[0].y === Snake.body[i].y
     ) {
-      gameOver = true;
       console.log("Game Over! You bit yourself.");
-      break;
+      return true;
     }
   }
 }
@@ -21,7 +32,7 @@ function fruitCollison() {
   // Checking collison with the fruit
   if (Snake.body[0].x === fruit.x && Snake.body[0].y === fruit.y) {
     console.log("Fruit Eaten");
-    spawnFruit();
+    return true;
   } else {
     // snake growing logic
     Snake.body.pop();
@@ -50,11 +61,12 @@ function drawSnake() {
 }
 
 function updateSnakePosition(deltaTime) {
-  if (gameOver) {
-    return;
-  }
-
   Snake.moveTimer += deltaTime;
+
+  let status = {
+    ateFruit: false,
+    died: false,
+  };
 
   if (Snake.moveTimer >= Snake.moveInterval) {
     Snake.vx = Snake.nextVx;
@@ -68,14 +80,20 @@ function updateSnakePosition(deltaTime) {
     };
 
     screenWrap(newHead);
-
     Snake.body.unshift(newHead);
 
-    fruitCollison();
-    bodyCollison();
+    if (fruitCollison()) {
+      status.ateFruit = true;
+    }
+
+    if (bodyCollison()) {
+      status.died = true;
+    }
 
     Snake.moveTimer -= Snake.moveInterval;
   }
+
+  return status;
 }
 
 const Snake = {
@@ -93,4 +111,4 @@ const Snake = {
   color: "green",
 };
 
-export { Snake, drawSnake, updateSnakePosition };
+export { Snake, drawSnake, updateSnakePosition, bodyCollison, resetSnake };
